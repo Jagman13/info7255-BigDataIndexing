@@ -1,0 +1,142 @@
+GET planindex/_search
+{
+  "query":{
+    "match": {
+      "objectId": "12xvxc345ssdsds-508"
+    }
+  }
+}
+
+************** Range query on top level object (Term query)***********
+GET planindex/_search
+{
+  "query": {
+      "nested": {
+        "path": "linkedPlanServices.planserviceCostShares",
+         "query":
+         {"range": {
+            "linkedPlanServices.planserviceCostShares.deductible": {
+            "lte": 1
+        }
+      }}
+    }}
+}
+
+**************  Match query for top level object (Compounded Query-boolean)***********
+GET planindex/_search
+{
+   "query":{
+     "nested": {
+       "path": "planCostShares",
+       "query": {
+         "bool":{
+         "must":[
+            {"match":{"planCostShares.copay":23}},
+            {"match":{"planCostShares.deductible":3000}}
+         ]
+      }
+       }
+     }
+   }
+}
+
+
+*************** Match query for nested Object (Joining Query) ***********************
+GET planindex/_search
+{
+  "query": {
+    "nested": {
+      "path": "linkedPlanServices.linkedService",
+      "query": {
+        "bool": {
+          "must": [
+         { "match": {"linkedPlanServices.linkedService.name":"Yearly physical" }}
+          ]
+        }
+      }
+    }
+  }
+}
+
+*************** Match query for nested Object (Joining Query) ************************
+GET planindex/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "nested" : {
+            "path": "linkedPlanServices.linkedService",
+            "query":{
+              "bool": {
+                "must": [
+                  {"match": {
+                    "linkedPlanServices.linkedService.objectId":"1234520xvc30asdf-521"
+                  }}
+                ]
+              }
+            }
+            }
+        },
+
+        {
+          "match_phrase": {
+            "objectId": "12xvxc345ssdsds-508"
+          }
+        }
+
+
+      ]
+    }
+  }
+}
+
+
+******************** WILD Query ************************
+GET planindex/_search
+{
+  "query":{
+    "nested": {
+        "path": "linkedPlanServices.linkedService",
+        "query": {
+          "wildcard": {
+           "linkedPlanServices.linkedService.name": "yearly*"
+         }
+        }
+    }
+  }
+}
+
+
+***************** Range and match query on nested object together ***************
+GET planindex/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "nested": {
+            "path": "linkedPlanServices.planserviceCostShares",
+             "query":
+             {
+               "range": {
+                "linkedPlanServices.planserviceCostShares.copay": {
+                "gte": 400
+            }
+          }}
+        }},
+        {
+          "nested": {
+            "path": "linkedPlanServices.planserviceCostShares",
+             "query":
+             {
+               "range": {
+                "linkedPlanServices.planserviceCostShares.deductible": {
+                "gte": 10
+            }
+          }}
+        }}
+      ]
+  }}
+}
+

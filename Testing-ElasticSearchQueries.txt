@@ -1,0 +1,278 @@
+PUT planindextest1/
+{
+  "mappings": {
+	"properties": {
+		"_org": {
+			"type": "text"
+		},
+		"objectId": {
+			"type": "keyword"
+		},
+		"objectType": {
+			"type": "text"
+		},
+		"planType": {
+			"type": "text"
+		},
+		"creationDate": {
+			"type": "date",
+			"format" : "MM-dd-yyyy"
+		},
+		"planCostShares": {
+			"properties": {
+				"copay": {
+					"type": "long"
+				},
+				"deductible": {
+					"type": "long"
+				},
+				"_org": {
+					"type": "text"
+				},
+				"objectId": {
+					"type": "keyword"
+				},
+				"objectType": {
+					"type": "text"
+				}
+			}
+		},
+		"linkedPlanServices": {
+			"type": "nested",
+			"properties": {
+				"_org": {
+					"type": "text"
+				},
+				"objectId": {
+					"type": "keyword"
+				},
+				"objectType": {
+					"type": "text"
+				},
+				"linkedService": {
+					"properties": {
+						"name": {
+							"type": "text"
+						},
+						"_org": {
+							"type": "text"
+						},
+						"objectId": {
+							"type": "keyword"
+						},
+						"objectType": {
+							"type": "text"
+						}
+					}
+				},
+				"planserviceCostShares": {
+					"properties": {
+						"copay": {
+							"type": "long"
+						},
+						"deductible": {
+							"type": "long"
+						},
+						"_org": {
+							"type": "text"
+						},
+						"objectId": {
+							"type": "keyword"
+						},
+						"objectType": {
+							"type": "text"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+}
+
+***************************************
+GET planindextest1/_search
+{
+"query": {
+ "bool": {
+   "must": {
+     "bool" : {
+       "must": [
+         { "match": {  "planCostShares.copay":23 }},
+         { "match": { "planCostShares.deductible": 2000 }}
+       ]
+     }
+   }
+ }
+}
+}
+
+**********************************************
+GET planindextest1/_search
+{
+  "query": {
+    "nested": {
+      "path": "linkedPlanServices",
+      "query": {
+        "bool": {
+          "must": [
+         { "match": {  "linkedPlanServices.linkedService.name":"Yearly physical" }},
+         { "match": {  "linkedPlanServices.planserviceCostShares.copay":0 }}
+          ]
+        }
+      }
+    }
+  }
+}
+
+****************************************************
+PUT planindextest1/_doc/12xvxc345ssdsds-508
+{"planCostShares": {
+        "_org": "example.com",
+        "copay": 25,
+        "objectId": "1234vxc2324sdf-501",
+        "deductible": 2000,
+        "objectType": "membercostshare"
+    },
+    "linkedPlanServices": [
+        {
+            "linkedService": {
+                "name": "well baby",
+                "_org": "example.com",
+                "objectId": "1234520xvc30sfs-505",
+                "objectType": "service"
+            },
+            "_org": "example.com",
+            "planserviceCostShares": {
+                "_org": "example.com",
+                "copay": 175,
+                "objectId": "1234512xvc1314sdfsd-506",
+                "deductible": 10,
+                "objectType": "membercostshare"
+            },
+            "objectId": "27283xvx9sdf-507",
+            "objectType": "planservice"
+        },
+        {
+            "linkedService": {
+                "name": "Yearly physical",
+                "_org": "example.com",
+                "objectId": "1234520xvc30asdf-502",
+                "objectType": "service"
+            },
+            "_org": "example.com",
+            "planserviceCostShares": {
+                "_org": "example.com",
+                "copay": 0,
+                "objectId": "1234512xvc1314asdfs-503",
+                "deductible": 10,
+                "objectType": "membercostshare"
+            },
+            "objectId": "27283xvx9asdff-504",
+            "objectType": "planservice"
+        }
+    ],
+    "planType": "inNetwork",
+    "_org": "example.com",
+    "creationDate": "12-12-2017",
+    "objectId": "12xvxc345ssdsds-508",
+    "objectType": "plan"
+}
+
+*********************update mapping***********
+PUT planindextest1/_mapping
+{
+
+	"properties": {
+		"_org": {
+			"type": "text"
+		},
+		"objectId": {
+			"type": "keyword"
+		},
+		"objectType": {
+			"type": "text"
+		},
+		"planType": {
+			"type": "text"
+		},
+		"creationDate": {
+			"type": "date",
+			"format" : "MM-dd-yyyy"
+		},
+		"planCostShares": {
+			"properties": {
+				"copay": {
+					"type": "long"
+				},
+				"deductible": {
+					"type": "long"
+				},
+				"_org": {
+					"type": "text"
+				},
+				"objectId": {
+					"type": "keyword"
+				},
+				"objectType": {
+					"type": "text"
+				}
+			}
+		},
+		"linkedPlanServices": {
+			"type": "nested",
+			"properties": {
+				"_org": {
+					"type": "text"
+				},
+				"objectId": {
+					"type": "keyword"
+				},
+				"objectType": {
+					"type": "text"
+				},
+				"linkedService": {
+					"properties": {
+						"name": {
+							"type": "text"
+						},
+						"_org": {
+							"type": "text"
+						},
+						"objectId": {
+							"type": "keyword"
+						},
+						"objectType": {
+							"type": "text"
+						}
+					}
+				},
+				"planserviceCostShares": {
+					"properties": {
+						"copay": {
+							"type": "long"
+						},
+						"deductible": {
+							"type": "long"
+						},
+						"_org": {
+							"type": "text"
+						},
+						"objectId": {
+							"type": "keyword"
+						},
+						"objectType": {
+							"type": "text"
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+*********************** Get all indices**********
+GET /_cat/indices
+
+***************** Delete index************
+DELETE plan

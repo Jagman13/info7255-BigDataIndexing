@@ -27,6 +27,8 @@ In this project, we will develop a REST Api to parse a JSON schema model divided
 Run as Spring Boot Application in any IDE.
 
 ## Querying Elasticsearch
-1. Once you have your applications running, run the PUT query in Testing-ElasticSearchQueries. This will create an index in elasticsearch
+1. Run both the application i.e FinalProject and Consumer Message Queue(CMQ). CMQ application will create the indexes.
 2. Run POST query from Postman
 3. Run custom search queries as per your use case(Few are present in DemoQueries)
+
+(Optional) For testing purpose - Inorder to test the indexes separately, Run the PUT query in Testing-ElasticSearchQueries on Kibana. This will create an index in elasticsearch
